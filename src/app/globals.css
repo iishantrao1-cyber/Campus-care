@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --color-forest: #0b3d2e;
+  --color-pine: #14532d;
+  --color-sage: #2d6a4f;
+  --color-leaf: #52b788;
+  --color-mist: #d8f3dc;
+  --color-cream: #f6f0e4;
+  --color-sand: #e8dcc8;
+  --color-paper: #fbf7f0;
+  --color-ink: #1c1915;
+  --color-terra: #c45c26;
+  --color-gold: #c8962a;
+  --color-clay: #8c3b1a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.grain {
+  position: relative;
+}
+
+.grain::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.badge-slate,
+.badge-amber,
+.badge-teal,
+.badge-green,
+.badge-rose,
+.badge-stone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-slate {
+  background: #e7e5e4;
+  color: #44403c;
+}
+.badge-amber {
+  background: #fef3c7;
+  color: #92400e;
+}
+.badge-teal {
+  background: #ccfbf1;
+  color: #115e59;
+}
+.badge-green {
+  background: #dcfce7;
+  color: #166534;
+}
+.badge-rose {
+  background: #ffe4e6;
+  color: #9f1239;
+}
+.badge-stone {
+  background: #f5f5f4;
+  color: #57534e;
+}
+
+.prio-low,
+.prio-medium,
+.prio-high,
+.prio-urgent {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.prio-low {
+  background: #ecfdf5;
+  color: #047857;
+}
+.prio-medium {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+.prio-high {
+  background: #fff7ed;
+  color: #c2410c;
+}
+.prio-urgent {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.card-lift {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(28, 25, 21, 0.1);
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.field {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid #d6cbb8;
+  background: #fffdf8;
+  padding: 0.75rem 0.95rem;
+  color: var(--color-ink);
+  outline: none;
+}
+.field:focus {
+  border-color: #2d6a4f;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.18);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-forest);
+  color: #f6f0e4;
+  font-weight: 650;
+  padding: 0.8rem 1.35rem;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.btn-primary:hover {
+  background: #14532d;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid #d6cbb8;
+  background: transparent;
+  color: var(--color-ink);
+  font-weight: 600;
+  padding: 0.75rem 1.2rem;
+}
+
+.btn-terra {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  background: var(--color-terra);
+  color: white;
+  font-weight: 650;
+  padding: 0.8rem 1.35rem;
+}
+
+/* 3D raised action buttons — staff/admin dashboard */
+.btn-3d {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  width: 100%;
+  border: none;
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.35rem 1.35rem;
+  text-align: left;
+  font-weight: 650;
+  color: #f6f0e4;
+  cursor: pointer;
+  text-decoration: none;
+  transform: translateY(0);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 -3px 0 rgba(0, 0, 0, 0.22) inset,
+    0 10px 0 var(--btn3d-edge, #06261c),
+    0 16px 28px rgba(28, 25, 21, 0.28);
+}
+.btn-3d:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 -3px 0 rgba(0, 0, 0, 0.2) inset,
+    0 13px 0 var(--btn3d-edge, #06261c),
+    0 22px 34px rgba(28, 25, 21, 0.32);
+}
+.btn-3d:active {
+  transform: translateY(6px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 -2px 0 rgba(0, 0, 0, 0.25) inset,
+    0 3px 0 var(--btn3d-edge, #06261c),
+    0 8px 16px rgba(28, 25, 21, 0.2);
+}
+.btn-3d .btn-3d-kicker {
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  font-weight: 700;
+}
+.btn-3d .btn-3d-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+.btn-3d .btn-3d-meta {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+.btn-3d-forest {
+  --btn3d-edge: #06261c;
+  background: linear-gradient(180deg, #1a6b4a 0%, #0b3d2e 55%, #083226 100%);
+}
+.btn-3d-terra {
+  --btn3d-edge: #7a2f12;
+  background: linear-gradient(180deg, #e07a3a 0%, #c45c26 55%, #a34a1c 100%);
+}
+.btn-3d-gold {
+  --btn3d-edge: #7a5a12;
+  background: linear-gradient(180deg, #e0b34a 0%, #c8962a 55%, #a67a1c 100%);
+  color: #1c1915;
+}
+.btn-3d-slate {
+  --btn3d-edge: #1f2933;
+  background: linear-gradient(180deg, #4b5563 0%, #334155 55%, #1e293b 100%);
+}
+.btn-3d-teal {
+  --btn3d-edge: #0f3f3a;
+  background: linear-gradient(180deg, #2dd4bf 0%, #0f766e 55%, #115e59 100%);
+}
+
+.staff-hero-panel {
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(82, 183, 136, 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(200, 150, 42, 0.18), transparent 50%),
+    linear-gradient(145deg, #0b3d2e 0%, #14532d 48%, #0b3d2e 100%);
+}

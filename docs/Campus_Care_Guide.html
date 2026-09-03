@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Campus Care — Complete Build Guide (PDF)</title>
+  <style>
+    :root {
+      --forest: #0b3d2e;
+      --sage: #2d6a4f;
+      --cream: #f6f0e4;
+      --ink: #1c1915;
+      --gold: #c8962a;
+      --sand: #e8dcc8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.55;
+      font-size: 11.5pt;
+    }
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 28px 36px 48px;
+    }
+    .cover {
+      background: linear-gradient(135deg, var(--forest), #14532d);
+      color: var(--cream);
+      border-radius: 18px;
+      padding: 40px 36px;
+      margin-bottom: 28px;
+    }
+    .cover h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.4rem;
+      margin: 8px 0 6px;
+      font-weight: 600;
+    }
+    .cover .tag {
+      display: inline-block;
+      border: 1px solid rgba(246,240,228,.35);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: .7rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .cover p { opacity: .9; max-width: 34em; }
+    h2 {
+      font-family: Georgia, serif;
+      color: var(--forest);
+      border-bottom: 2px solid var(--sand);
+      padding-bottom: 6px;
+      margin-top: 1.8em;
+      page-break-after: avoid;
+    }
+    h3 { color: var(--sage); margin-top: 1.2em; page-break-after: avoid; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      font-size: 10.5pt;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid var(--sand);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--cream); color: var(--forest); }
+    code, .mono {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: .9em;
+      background: #f4f1ea;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    pre {
+      background: #14241c;
+      color: #d8f3dc;
+      padding: 14px 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-size: 9.5pt;
+      line-height: 1.45;
+      page-break-inside: avoid;
+    }
+    pre code { background: none; color: inherit; padding: 0; }
+    ul, ol { padding-left: 1.25rem; }
+    li { margin: 4px 0; }
+    .box {
+      background: var(--cream);
+      border-left: 4px solid var(--gold);
+      padding: 12px 14px;
+      border-radius: 0 10px 10px 0;
+      margin: 14px 0;
+    }
+    .toc a { color: var(--sage); text-decoration: none; }
+    .toc li { margin: 6px 0; }
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 14px;
+      border-top: 1px solid var(--sand);
+      font-size: 9.5pt;
+      color: #666;
+    }
+    .badge {
+      display: inline-block;
+      background: #d8f3dc;
+      color: var(--forest);
+      font-size: 9pt;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: .04em;
+    }
+    @media print {
+      body { font-size: 10.5pt; }
+      .page { padding: 0; max-width: none; }
+      .cover { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+      h2 { break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="cover">
+      <span class="tag">Smart India Hackathon · Build Guide</span>
+      <h1>Campus Care</h1>
+      <p style="font-size:1.15rem;margin:0 0 10px;color:#c8962a;">Student Complaint Portal — Fullstack Engineering Guide</p>
+      <p>
+        How to design, implement, secure, deploy, and present a verified college grievance
+        system using <strong>Next.js</strong>, <strong>PostgreSQL</strong>, <strong>Drizzle ORM</strong>,
+        and server-side role-based access control.
+      </p>
+      <p style="margin-bottom:0;font-size:.9rem;opacity:.8;">
+        Print this page → Save as PDF · Companion to README.md and docs/BUILD_GUIDE.md
+      </p>
+    </header>
+
+    <section class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#problem">Problem &amp; solution</a></li>
+        <li><a href="#tools">Tools &amp; tech stack</a></li>
+        <li><a href="#arch">Architecture</a></li>
+        <li><a href="#db">Database design</a></li>
+        <li><a href="#steps">Step-by-step build</a></li>
+        <li><a href="#auth">Auth, OTP &amp; MFA</a></li>
+        <li><a href="#rbac">Roles &amp; authorization</a></li>
+        <li><a href="#complaints">Complaint workflow</a></li>
+        <li><a href="#security">Security checklist</a></li>
+        <li><a href="#env">Environment &amp; deploy</a></li>
+        <li><a href="#test">Test plan</a></li>
+        <li><a href="#sih">SIH presentation notes</a></li>
+        <li><a href="#pdf">How to export this PDF</a></li>
+      </ol>
+    </section>
+
+    <section id="problem">
+      <h2>1. Problem &amp; solution</h2>
+      <p>
+        Colleges need accountable grievance redressal: hostel, mess, academics, IT, transport,
+        and ragging issues often disappear into WhatsApp threads or offline suggestion boxes.
+        UGC/AICTE expectations require a working grievance cell with traceability.
+      </p>
+      <div class="box">
+        <strong>Campus Care</strong> turns each issue into a ticket with a public ID, status timeline,
+        department routing, verified student/staff identity (college directory + email OTP),
+        and an admin control room — without allowing self-registered administrators.
+      </div>
+    </section>
+
+    <section id="tools">
+      <h2>2. Tools &amp; tech stack</h2>
+      <h3>Development tools</h3>
+      <table>
+        <tr><th>Tool</th><th>Use</th></tr>
+        <tr><td>Node.js 20+ &amp; npm</td><td>Runtime, packages, scripts</td></tr>
+        <tr><td>VS Code / Cursor</td><td>Edit TSX, Tailwind, Server Actions</td></tr>
+        <tr><td>Git</td><td>Version control (exclude <code>.env</code>)</td></tr>
+        <tr><td>PostgreSQL 14+</td><td>Primary relational database</td></tr>
+        <tr><td>psql / pgAdmin / DBeaver</td><td>Inspect schema and data</td></tr>
+        <tr><td>Chrome DevTools</td><td>Cookies, network, responsive checks</td></tr>
+        <tr><td>Browser Print</td><td>Export this guide to PDF</td></tr>
+      </table>
+
+      <h3>Application stack</h3>
+      <table>
+        <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+        <tr><td>Framework</td><td>Next.js 16 App Router</td><td>RSC + Server Actions</td></tr>
+        <tr><td>Language</td><td>TypeScript</td><td>Typed models &amp; safer refactors</td></tr>
+        <tr><td>UI</td><td>React 19</td><td>Forms with <code>useActionState</code></td></tr>
+        <tr><td>CSS</td><td>Tailwind CSS v4</td><td>Fast, consistent campus UI</td></tr>
+        <tr><td>DB</td><td>PostgreSQL</td><td>Integrity for tickets &amp; roles</td></tr>
+        <tr><td>ORM</td><td>Drizzle ORM + drizzle-kit</td><td>Parameterized SQL, schema push</td></tr>
+        <tr><td>Driver</td><td>pg</td><td>Connection pooling</td></tr>
+        <tr><td>Crypto</td><td>Node <code>crypto</code></td><td>scrypt, HMAC sessions, OTP hashes</td></tr>
+        <tr><td>MFA</td><td>Custom TOTP module</td><td>Admin authenticator codes</td></tr>
+        <tr><td>Email</td><td>SMTP env + admin outbox</td><td>OTP delivery without fake public logins</td></tr>
+      </table>
+    </section>
+
+    <section id="arch">
+      <h2>3. Architecture</h2>
+      <pre><code>Browser  --HTTPS--&gt;  Next.js (Server Components + Server Actions)
+                              |
+                         Drizzle ORM
+                              |
+                         PostgreSQL
+                         (users, directories, complaints, OTP, outbox)
+                              |
+                      SMTP gateway (optional)
+                      else admin-only email outbox</code></pre>
+      <p>
+        Mutations run in <span class="badge">"use server"</span> actions. The browser never receives
+        database passwords, session secrets, or the authority to set <code>role=admin</code>.
+      </p>
+    </section>
+
+    <section id="db">
+      <h2>4. Database design</h2>
+      <table>
+        <tr><th>Table</th><th>Purpose</th></tr>
+        <tr><td><code>users</code></td><td>Accounts: hashed password, role, MFA, verified flag</td></tr>
+        <tr><td><code>authorized_students</code></td><td>College student directory (ID↔email)</td></tr>
+        <tr><td><code>authorized_staff</code></td><td>College staff directory</td></tr>
+        <tr><td><code>email_verifications</code></td><td>Hashed OTPs for register/reset</td></tr>
+        <tr><td><code>email_outbox</code></td><td>Mail audit; OTP holding for IT if no SMTP</td></tr>
+        <tr><td><code>complaints</code></td><td>Tickets, status, assignment, anonymity</td></tr>
+        <tr><td><code>complaint_updates</code></td><td>Timeline / audit trail</td></tr>
+        <tr><td><code>feedback</code></td><td>Student rating after resolution</td></tr>
+      </table>
+      <p><strong>Status flow:</strong> submitted → under_review → in_progress → resolved → closed (or rejected).</p>
+    </section>
+
+    <section id="steps">
+      <h2>5. Step-by-step build</h2>
+      <h3>Phase A — Scaffold</h3>
+      <pre><code>npx create-next-app@latest campus-care --typescript --tailwind --app
+cd campus-care
+npm install drizzle-orm pg dotenv
+npm install -D drizzle-kit @types/pg</code></pre>
+
+      <h3>Phase B — Database client &amp; schema</h3>
+      <ol>
+        <li>Create <code>src/db/index.ts</code> with a <code>pg</code> Pool and <code>drizzle(pool)</code>.</li>
+        <li>Define tables in <code>src/db/schema.ts</code>.</li>
+        <li>Add <code>drizzle.config.json</code> pointing at the schema and <code>DATABASE_URL</code>.</li>
+        <li>Run <code>npx drizzle-kit push</code>.</li>
+      </ol>
+
+      <h3>Phase C — Auth library</h3>
+      <ol>
+        <li>scrypt password hash/verify</li>
+        <li>HMAC-signed httpOnly session cookie</li>
+        <li>Login &amp; OTP rate limits</li>
+        <li>Email challenge create/consume</li>
+        <li>TOTP MFA helpers</li>
+      </ol>
+
+      <h3>Phase D — Server Actions</h3>
+      <ul>
+        <li><code>auth.ts</code> — login, register student/staff, verify OTP, reset password</li>
+        <li><code>admin-directory.ts</code> — CSV import, provision admin, activate users</li>
+        <li><code>complaints.ts</code> — create/update/feedback with authorization</li>
+      </ul>
+
+      <h3>Phase E — Pages &amp; UI</h3>
+      <p>
+        Home, register, verify, login, dashboard, new complaint, ticket detail, public track,
+        admin queue, admin directory. Keep existing Campus Care forest/cream styling; only add
+        auth fields (OTP, MFA, directory empty state).
+      </p>
+
+      <h3>Phase F — Validate</h3>
+      <pre><code>npx next typegen
+npx tsc --noEmit
+npm run build
+npm run start</code></pre>
+    </section>
+
+    <section id="auth">
+      <h2>6. Auth, OTP &amp; MFA</h2>
+      <h3>Student / staff verification</h3>
+      <ol>
+        <li>User submits college ID + official email + password.</li>
+        <li>Server checks <em>active</em> directory row: ID <strong>and</strong> email must match.</li>
+        <li>Domain-only checks are insufficient and not used as sole proof.</li>
+        <li>OTP emailed (or placed in admin outbox).</li>
+        <li>On success, account created with server-assigned role only.</li>
+      </ol>
+      <div class="box">
+        If the authorized directory has zero rows, registration UI shows
+        <strong>“unavailable”</strong> — open signup is blocked on purpose.
+      </div>
+      <h3>Admin</h3>
+      <ul>
+        <li>Created via <code>ADMIN_BOOTSTRAP_*</code> env (first time) or existing admin provision form.</li>
+        <li>Login requires MFA (TOTP / backup codes).</li>
+        <li>Public registration cannot create admins.</li>
+      </ul>
+    </section>
+
+    <section id="rbac">
+      <h2>7. Roles &amp; authorization</h2>
+      <table>
+        <tr><th>Role</th><th>Allowed</th><th>Denied</th></tr>
+        <tr>
+          <td>Student</td>
+          <td>Own complaints, feedback, public track</td>
+          <td>Other students’ tickets, /admin</td>
+        </tr>
+        <tr>
+          <td>Staff</td>
+          <td>Assigned / same-department tickets</td>
+          <td>Directory admin tools, unrestricted all-campus unless assigned</td>
+        </tr>
+        <tr>
+          <td>Admin</td>
+          <td>Full queue, assign, directory, provision admins</td>
+          <td>Self-signup as admin</td>
+        </tr>
+      </table>
+      <p>
+        <strong>IDOR rule:</strong> loading <code>/complaints/124</code> always checks ownership or staff scope on the server.
+      </p>
+    </section>
+
+    <section id="complaints">
+      <h2>8. Complaint workflow</h2>
+      <ol>
+        <li>Verified student files ticket (category → department).</li>
+        <li>System assigns ticket number like <code>CC-2026-0001</code>.</li>
+        <li>Timeline logs every status change.</li>
+        <li>Staff/admin updates status and notes.</li>
+        <li>Student rates resolution; ticket may close.</li>
+        <li>Anyone can track by ticket ID on <code>/track</code> (anonymous names hidden).</li>
+      </ol>
+    </section>
+
+    <section id="security">
+      <h2>9. Security checklist</h2>
+      <ul>
+        <li>Password hashing (scrypt) — no plain text</li>
+        <li>Rate-limited login &amp; OTP</li>
+        <li>httpOnly, Secure (prod), SameSite=Lax cookies</li>
+        <li>Parameterized SQL via Drizzle</li>
+        <li>XSS escaping of user content</li>
+        <li>Server-side RBAC on every action</li>
+        <li>Secrets only in environment variables</li>
+        <li><code>.env</code> gitignored</li>
+        <li>HTTPS in production</li>
+        <li>No public demo credentials on marketing pages</li>
+      </ul>
+    </section>
+
+    <section id="env">
+      <h2>10. Environment &amp; deploy</h2>
+      <pre><code>DATABASE_URL=postgresql://...
+SESSION_SECRET=long-random-string
+APP_URL=https://campuscare.college.edu
+ADMIN_BOOTSTRAP_EMAIL=...
+ADMIN_BOOTSTRAP_PASSWORD=...
+ADMIN_BOOTSTRAP_NAME=...
+ADMIN_BOOTSTRAP_EMPLOYEE_ID=ADM-001
+# optional SMTP_* and ADMIN_MFA_BOOTSTRAP_CODE</code></pre>
+      <ol>
+        <li>Provision Postgres and set env.</li>
+        <li><code>drizzle-kit push</code> then <code>npm run build &amp;&amp; npm run start</code>.</li>
+        <li>Terminate TLS at reverse proxy.</li>
+        <li>Admin imports student/staff directories.</li>
+        <li>Configure SMTP; rotate bootstrap secrets.</li>
+      </ol>
+      <h3>What college IT must provide</h3>
+      <ul>
+        <li>Authorized student list (ID, name, official email, dept, course, year, active)</li>
+        <li>Authorized staff list (employee ID, name, email, dept, designation, active)</li>
+        <li>SMTP or mail relay</li>
+        <li>First admin identity</li>
+        <li>Production domain + HTTPS certificate</li>
+      </ul>
+    </section>
+
+    <section id="test">
+      <h2>11. Test plan (quick)</h2>
+      <table>
+        <tr><th>#</th><th>Test</th><th>Expect</th></tr>
+        <tr><td>1</td><td>Register with empty directory</td><td>Unavailable message</td></tr>
+        <tr><td>2</td><td>Mismatched ID/email</td><td>Rejected</td></tr>
+        <tr><td>3</td><td>Valid register + OTP</td><td>Student/staff account</td></tr>
+        <tr><td>4</td><td>Student visits /admin</td><td>Blocked</td></tr>
+        <tr><td>5</td><td>Swap complaint ID in URL</td><td>Denied (IDOR safe)</td></tr>
+        <tr><td>6</td><td>Admin login</td><td>MFA required</td></tr>
+        <tr><td>7</td><td>Brute-force passwords</td><td>Lockout</td></tr>
+        <tr><td>8</td><td>Script tags in complaint</td><td>Rendered as text</td></tr>
+      </table>
+    </section>
+
+    <section id="sih">
+      <h2>12. SIH presentation notes</h2>
+      <p><strong>One-liner:</strong> Verified campus grievances as accountable tickets — directory identity, OTP proof, hashed credentials, department workflows, admin audit.</p>
+      <p><strong>Demo path:</strong> Home → Admin directory import → Student register/OTP → File complaint → Track ID → Staff status update → Mention MFA &amp; no self-admin.</p>
+      <p><strong>Key files to open live:</strong> <code>schema.ts</code>, <code>auth.ts</code> actions, <code>complaints.ts</code> IDOR checks, <code>admin/directory</code>.</p>
+    </section>
+
+    <section id="pdf">
+      <h2>13. How to export this document as PDF</h2>
+      <ol>
+        <li>Open <code>docs/Campus_Care_Guide.html</code> in Chrome or Edge.</li>
+        <li>Press <strong>Ctrl+P</strong> (Windows/Linux) or <strong>Cmd+P</strong> (macOS).</li>
+        <li>Printer / Destination: <strong>Save as PDF</strong>.</li>
+        <li>Enable <em>Background graphics</em> for colored header.</li>
+        <li>Save as <code>Campus_Care_Build_Guide.pdf</code>.</li>
+      </ol>
+      <div class="box">
+        Markdown sources: <code>README.md</code> (project overview) and
+        <code>docs/BUILD_GUIDE.md</code> (detailed rebuild guide). Keep all three in the repo for teammates.
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Campus Care · Student Complaint Portal · SIH Build Guide · Next.js · PostgreSQL · Drizzle ORM ·
+      Server-side RBAC · OTP verification · Admin MFA
+    </p>
+  </div>
+</body>
+</html>
