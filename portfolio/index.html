@@ -25,5 +25,19 @@
       </div>
     </noscript>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // boot watchdog — if React never mounts (JS blocked/crashed at load),
+      // surface a visible hint instead of a silent dark screen
+      setTimeout(function () {
+        if (!document.querySelector('#root > *')) {
+          var d = document.createElement('div')
+          d.style.cssText =
+            'position:fixed;inset:0;display:grid;place-items:center;background:#050810;color:#eef3fb;font-family:system-ui;z-index:9999;text-align:center;padding:24px'
+          d.innerHTML =
+            '<div style="max-width:520px"><h2 style="font-size:18px;margin-bottom:10px">The app did not start</h2><p style="font-size:13px;color:#94a3bd;line-height:1.7">JavaScript failed to load or run in this browser. Try a recent version of Chrome, Edge, Firefox or Safari (with hardware acceleration enabled) and reload this page.</p></div>'
+          document.body.appendChild(d)
+        }
+      }, 8000)
+    </script>
   </body>
 </html>

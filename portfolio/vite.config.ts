@@ -12,6 +12,11 @@ export default defineConfig({
     // the sandbox previews the app through a proxied host
     allowedHosts: true,
   },
+  preview: {
+    host: true,
+    port: 4173,
+    allowedHosts: true,
+  },
   build: {
     chunkSizeWarningLimit: 1800,
     target: 'es2022',

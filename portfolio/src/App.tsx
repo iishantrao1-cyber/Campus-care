@@ -7,6 +7,7 @@ import { store, useApp } from './state/store'
 import { scrollState } from './state/scroll'
 import { pointer } from './state/pointer'
 import { detectTier, tierSettings, prefersReducedMotion } from './lib/tier'
+import { hasWebGL } from './lib/webgl'
 import Loader from './components/Loader'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
@@ -18,6 +19,8 @@ import SkillPanel from './components/SkillPanel'
 import ContactSection from './components/ContactSection'
 import ScrollRail from './components/ScrollRail'
 import A11ySummary from './components/A11ySummary'
+import ErrorBoundary from './components/ErrorBoundary'
+import NoWebGLPage from './components/NoWebGLPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -25,6 +28,14 @@ gsap.registerPlugin(ScrollTrigger)
 const Experience = lazy(() => import('./3d/Experience'))
 
 export default function App() {
+  // No WebGL → the whole site renders as a normal readable page instead of
+  // risking a black screen.
+  const glOK = useState(hasWebGL)[0]
+  if (!glOK) return <NoWebGLPage />
+  return <Portfolio3D />
+}
+
+function Portfolio3D() {
   const tier = useState(detectTier)[0]
   const reduced = useState(prefersReducedMotion)[0]
 
@@ -91,9 +102,11 @@ export default function App() {
         role="img"
         aria-label="Interactive 3D world: an animated developer walks to his desk and starts coding as you scroll, followed by projects, moving certificates, floating skill spheres and a contact scene"
       >
-        <Suspense fallback={null}>
-          <Experience />
-        </Suspense>
+        <ErrorBoundary label="3D experience" compact>
+          <Suspense fallback={null}>
+            <Experience />
+          </Suspense>
+        </ErrorBoundary>
       </div>
 
       <div className="vignette" aria-hidden="true" />

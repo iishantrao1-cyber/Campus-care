@@ -178,13 +178,291 @@ body.lock {
 }
 
 /* ── loader ───────────────────────────────────────────────────────── */
+/* ── error surfaces (never a silent black screen) ─────────────────── */
+#diag {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 300;
+  max-width: min(560px, 90vw);
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 99, 99, 0.55);
+  border-left: 3px solid #ff5f5f;
+  border-radius: 10px;
+  background: rgba(20, 6, 8, 0.92);
+  color: #ffd9d9;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+#diag.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fatal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at 50% 40%, #0a1220 0%, var(--bg-deep) 75%);
+}
+.fatal-card {
+  max-width: 640px;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(12, 17, 32, 0.98), rgba(6, 9, 17, 0.98));
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9);
+}
+.fatal-kicker {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.fatal-card h2 {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+}
+.fatal-msg {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #ffd9d9;
+}
+.fatal-stack {
+  display: block;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 160px;
+  overflow: auto;
+}
+.fatal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.fatal-hint {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.gl-failed {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: min(520px, 92vw);
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 176, 32, 0.5);
+  border-radius: 14px;
+  background: rgba(18, 12, 4, 0.92);
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.gl-failed-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+}
+.gl-failed-msg {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+/* ── no-WebGL fallback page ───────────────────────────────────────── */
+.nogl {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(69, 224, 255, 0.08), transparent 55%),
+    var(--bg);
+  padding: 48px 20px 80px;
+}
+.nogl-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  display: grid;
+  gap: 44px;
+}
+.nogl-notice {
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 176, 32, 0.45);
+  border-radius: 12px;
+  background: rgba(18, 12, 4, 0.6);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #ffe9c4;
+}
+.nogl h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 800;
+  margin-top: 14px;
+}
+.nogl h1 .accent {
+  color: var(--accent);
+}
+.nogl h2 {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.nogl section h2 {
+  margin-bottom: 14px;
+}
+.nogl section {
+  display: grid;
+  gap: 18px;
+}
+.nogl-bio,
+.nogl-kv,
+.nogl-goal {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #c4d0e4;
+}
+.nogl-projects {
+  display: grid;
+  gap: 16px;
+}
+.nogl-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(11, 16, 30, 0.9), rgba(6, 9, 17, 0.9));
+  display: grid;
+  gap: 10px;
+}
+.nogl-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+}
+.nogl-card p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #c4d0e4;
+}
+.nogl-tagline {
+  font-family: var(--mono) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent) !important;
+}
+.nogl-role {
+  color: var(--muted) !important;
+}
+.nogl-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.nogl-certs {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+.nogl-certs li {
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 13.5px;
+  color: #d7e6f7;
+}
+.nogl-certs a {
+  color: var(--accent);
+}
+.nogl-skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.nogl-skill {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.nogl-skill-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14.5px;
+}
+.nogl-skill-level {
+  display: flex;
+  gap: 5px;
+}
+.nogl-skill-level i {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.nogl-skill-level i.on {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+.nogl-skill-blurb {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.nogl-contact {
+  text-align: center;
+}
+.nogl-contact h2 {
+  font-size: clamp(1.2rem, 3vw, 1.7rem) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--text) !important;
+  font-weight: 800;
+}
+.nogl-contact p {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
 .loader {
   position: fixed;
   inset: 0;
   z-index: 100;
   display: grid;
   place-items: center;
-  background: radial-gradient(ellipse at 50% 40%, #081020 0%, var(--bg-deep) 70%);
+  background: radial-gradient(ellipse at 50% 40%, #0a1424 0%, var(--bg-deep) 72%);
   transition: opacity 0.9s ease;
 }
 .loader.done {
@@ -233,7 +511,7 @@ body.lock {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.34em;
-  color: var(--muted);
+  color: #bccbe4;
   text-transform: uppercase;
   min-height: 14px;
 }
